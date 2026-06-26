@@ -34,6 +34,10 @@ app.use('/api/movies', moviesRouter);
 const usersRouter = require('./routes/users');
 app.use('/api/users', usersRouter);
 
+// To-watch list routes
+const toWatchListRouter = require('./routes/toWatchList');
+app.use('/api/towatchlist', toWatchListRouter);
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
