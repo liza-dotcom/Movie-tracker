@@ -30,6 +30,11 @@ app.get('/api/db-test', async (req, res) => {
 const moviesRouter = require('./routes/movies');
 app.use('/api/movies', moviesRouter);
 
+// User routes (signup, login, stats)
+const usersRouter = require('./routes/users');
+app.use('/api/users', usersRouter);
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
