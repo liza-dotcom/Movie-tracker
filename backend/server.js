@@ -1,14 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const { Pool } = require('pg');
+const pool = require('./db');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Database connection pool
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+app.use(express.json());
 
 // Basic health check route
 app.get('/', (req, res) => {
@@ -28,6 +25,10 @@ app.get('/api/db-test', async (req, res) => {
     res.status(500).json({ error: 'Database connection failed' });
   }
 });
+
+// Movie routes
+const moviesRouter = require('./routes/movies');
+app.use('/api/movies', moviesRouter);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
