@@ -1,0 +1,102 @@
+/* Login page container with background image */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  font-family: 'Arial', sans-serif;
+  gap: 2em;
+}
+
+/* Dark overlay on background */
+.login-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+/* Login card styling */
+.login-card {
+  position: relative;
+  z-index: 2;
+  background-color: rgba(34, 34, 34, 0.95);
+  padding: 2em;
+  border-radius: 1em;
+  width: 22em;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  box-shadow: 0 0 2em rgba(0,0,0,0.5);
+}
+
+/* Form header */
+.login-card h1 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 0.5em;
+  font-size: 1.5em;
+}
+
+/* Input fields */
+.login-card input[type="text"],
+.login-card input[type="password"] {
+  width: 100%;
+  padding: 0.7em;
+  border-radius: 0.5em;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  background-color: rgba(128, 128, 128, 0.615);
+  color: #fff;
+  box-sizing: border-box;
+  gap: 1em;
+  margin-bottom: 0.5em;
+}
+
+/* Placeholder color */
+.login-card input::placeholder {
+  color: #888888;
+}
+
+/* Login button */
+.login-card button {
+  padding: 0.8em;
+  border-radius: 0.5em;
+  border: none;
+  background-color: #e50914; /* Netflix-style red */
+  color: #fff;
+  font-weight: bold;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Button hover effect */
+.login-card button:hover {
+  background-color: #f6121d;
+}
+
+/* Signup link */
+.login-card .signup-link {
+  text-align: center;
+  font-size: 0.9em;
+  color: white;
+}
+
+.login-card .signup-link a {
+  color: #e50914;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-card .signup-link a:hover {
+  text-decoration: underline;
+}

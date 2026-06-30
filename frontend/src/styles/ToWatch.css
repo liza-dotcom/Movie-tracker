@@ -1,0 +1,159 @@
+/* watch list header style */
+
+.watchlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-inline: 1rem;
+}
+
+.watchlist-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: var(--accent-color, #00e0d8);
+}
+
+.sort-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+
+  cursor: pointer;
+  font-size: 1rem;
+
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.sort-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-0.125rem);
+}
+
+.sort-btn:active {
+  transform: translateY(0);
+}
+
+
+/* Container Layout */
+
+body {
+  background: #0b0b0b;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  color: #f1f1f1;
+}
+
+.watchlist-container {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  color: #f1f1f1;
+}
+
+.watchlist-container h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: left;
+  margin-bottom: 1.2rem;
+  color: #ffffff;
+  text-shadow: 0 0 0.6rem rgba(0, 255, 200, 0.4);
+}
+
+/* Sort Button  */
+.watchlist-container button {
+  display: block;
+  margin: 0 auto;
+  background: #222;
+  color: #00e6c3;
+  padding: 0.6rem 1.4rem;
+  border: 0.1rem solid #00e6c350;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.2s ease;
+}
+
+.watchlist-container button:hover {
+  background: #00e6c320;
+  border-color: #00e6c3;
+  transform: scale(1.05);
+}
+
+/*  Movie Grid*/
+.watchlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Movie Card Override */
+.movie-card {
+  background: #111;
+  border: 0.1rem solid rgba(0, 255, 200, 0.1);
+  border-radius: 0.7rem;
+  padding: 1rem;
+  transition: 0.25s ease-in-out;
+}
+
+.movie-card:hover {
+  border-color: #00e6c3;
+  transform: translateY(-0.4rem);
+  box-shadow: 0 0 1rem rgba(0, 255, 200, 0.25);
+}
+
+/*Card Buttons  */
+.movie-card button {
+  background: #181818;
+  color: #00e6c3;
+  padding: 0.5rem 1rem;
+  border: 0.1rem solid #00e6c350;
+  border-radius: 0.4rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.movie-card button:hover {
+  background: #00e6c320;
+  border-color: #00e6c3;
+}
+
+.movie-card .remove-btn {
+  border-color: #ff4747;
+  color: #ff7b7b;
+}
+
+.movie-card .remove-btn:hover {
+  background: rgba(255, 80, 80, 0.15);
+  border-color: #ff4747;
+}
+
+/* Notes Display*/
+.movie-notes {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: #cccccc;
+  background: #1a1a1a;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.4rem;
+  border: 0.1rem solid #333;
+}
+
+/* Priority Badge*/
+.priority-badge {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  background: #00e6c320;
+  color: #00e6c3;
+  border: 0.1rem solid #00e6c340;
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}

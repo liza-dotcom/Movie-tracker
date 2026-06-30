@@ -1,0 +1,79 @@
+/* page background */
+.completed-container {
+  background-color: #121212;
+  color: #e0e0e0;
+  padding: 2em;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.completedlist-grid{
+
+    display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-top: 1em;
+}
+/* sort section container */
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 1em;
+  font-size: 0.9em;
+}
+
+/* sort label */
+.sort-btn label {
+  color: #f1f1f1;
+  font-weight: 500;
+}
+
+/* sort select dropdown */
+.sort-btn select {
+  background-color: #1f1f1f;
+  color: #f1f1f1;
+  border: 0.1em solid #333;
+  border-radius: 0.25em;
+  padding: 0.3em 0.5em;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+/* style select options */
+.sort-btn select option {
+  background-color: #1f1f1f;
+  color: #f1f1f1;
+}
+
+/* sort button */
+.sort-btn button {
+  background-color: #1f1f1f;
+  color: #f1f1f1;
+  border: 0.1em solid #333;
+  border-radius: 0.25em;
+  padding: 0.3em 0.6em;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.sort-btn button:hover {
+  background-color: #333;
+}
+
+
+
+
+/* details button */
+.details-button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 0.25em;
+  padding: 0.3em 0.5em;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+.details-button:hover {
+  background-color: #555;
+}

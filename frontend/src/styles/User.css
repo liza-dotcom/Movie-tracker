@@ -1,0 +1,77 @@
+/* User.css */
+
+/* Container for the whole stats section */
+.stats-container {
+  max-width: 60em; /* ~960px equivalent */
+  margin: 2em auto;
+  padding: 1em;
+  background-color: #1e1e2f; /* dark background */
+  color: #ffffff; /* text color */
+  border-radius: 0.75em;
+  box-shadow: 0 0.25em 0.9375em rgba(0, 0, 0, 0.5); /* 4px, 15px equivalent */
+}
+
+/* Main heading */
+.stats-container h1 {
+  text-align: center;
+  margin-bottom: 1.5em;
+  font-size: 2em;
+  color: #f0f0f5;
+}
+
+/* Grid layout for stat cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13.75em, 1fr)); /* ~220px */
+  gap: 1em;
+}
+
+/* Individual stat card */
+.stat-card {
+  background-color: #2a2a3f; /* slightly lighter dark for cards */
+  padding: 1em;
+  border-radius: 0.5em;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Card hover effect */
+.stat-card:hover {
+  transform: translateY(-0.3125em); /* ~5px */
+  box-shadow: 0 0.375em 1.25em rgba(0, 0, 0, 0.6); /* 6px 20px equivalent */
+}
+
+/* Card headings */
+.stat-card h2 {
+  font-size: 1.1em;
+  margin-bottom: 0.5em;
+  color: #cfd6e4;
+}
+
+/* Card values */
+.stat-card p {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Loading and error messages */
+.stats-container p {
+  text-align: center;
+  margin: 1em 0;
+}
+
+.stats-container p[style*="color: red"] {
+  color: #ff6b6b; /* red for errors */
+}
+
+/* Responsive adjustments */
+@media (max-width: 37.5em) { /* ~600px */
+  .stats-container {
+    padding: 0.5em;
+  }
+
+  .stat-card p {
+    font-size: 1.2em;
+  }
+}

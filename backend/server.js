@@ -38,9 +38,9 @@ app.use('/api/users', usersRouter);
 const toWatchListRouter = require('./routes/toWatchList');
 app.use('/api/towatchlist', toWatchListRouter);
 
-// Completed watch list routes
 const completedWatchListRouter = require('./routes/completedWatchList');
 app.use('/api/completedwatchlist', completedWatchListRouter);
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
