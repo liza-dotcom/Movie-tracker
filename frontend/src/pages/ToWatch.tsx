@@ -3,6 +3,8 @@ import { useAuth } from "../context/AuthContext";
 import MovieCard from "../components/MovieCard";
 import Navbar from "../components/Navbar";
 import { useNavigate, Navigate } from "react-router-dom";
+import Modal from "../components/Modal";
+
 import {
   getToWatchList,
   updatePriority,
@@ -26,6 +28,26 @@ export default function ToWatchList() {
   const [sortAsc, setSortAsc] = useState(true); // default order is set to ascending 
   const [allMovies, setAllMovies] = useState<any[]>([]);
 
+  // add the modal state render to get user input
+
+  const [modal, setModal] = useState<{
+  message: string;
+  defaultValue: string;
+  onConfirm: (val: string) => void;
+} | null>(null);
+
+const showPrompt = (message: string, defaultValue: string = ""): Promise<string | null> => {
+  return new Promise((resolve) => {
+    setModal({
+      message,
+      defaultValue,
+      onConfirm: (val) => {
+        setModal(null);
+        resolve(val);
+      },
+    });
+  });
+};
 
 // Handle logout for navbar on the top of page 
   function handleLogout() {
@@ -71,9 +93,10 @@ export default function ToWatchList() {
 
   // Quick priority change by user
   const handlePriorityChange = async (entryId: number) => {
-    const entry = watchList.find((e) => e.listID === entryId); // get the list credentials (id and all)
+    const entry = watchList.find((e) => e.list_id === entryId); // get the list credentials (id and all)
     if (!entry) return; // return if entry list with that id is not found
-    const priorityInput = prompt("Enter new priority(1-10):", entry.priority?.toString() || "0"); // get the new priority 
+    const priorityInput = await showPrompt("Enter new priority (1-10):", entry.priority?.toString() || "0"); // get new priority
+if (priorityInput === null) return; // user cancelled  
     const newPriority = priorityInput ? parseInt(priorityInput) : 0;
 
     if (isNaN(newPriority)) {
@@ -92,7 +115,7 @@ export default function ToWatchList() {
 
   // Mark a movie in list as watched/completed
   const handleMarkAsWatched = async (entryId: number) => {
-    const ratingInput = prompt("Enter rating (1-10) for this movie (optional):");
+const ratingInput = await showPrompt("Enter rating (1-10) for this movie (optional):");
 
   // Convert to number if provided, otherwise null
   const numericRating = ratingInput !== null && ratingInput.trim() !== "" ? parseFloat(ratingInput) : null; // send null if empty(user does not provide a rating )
@@ -114,7 +137,8 @@ export default function ToWatchList() {
 
   // Remove movie from toWatch list
   const handleRemove = async (entryId: number) => {
-    if (!confirm("Are you sure you want to remove this movie?")) return;
+    const confirmed = await showPrompt("Type 'yes' to confirm removal:");
+    if (confirmed?.toLowerCase() !== "yes") return;
     try {
       await deleteToWatchEntry(entryId, apiKey!);
       fetchList(); // refresh the watchList after removal
@@ -125,11 +149,12 @@ export default function ToWatchList() {
 
   // Update full entry (notes + priority)
   const handleUpdateEntry = async (entryId: number) => {
-    const entry = watchList.find((e) => e.listID === entryId);
+    const entry = watchList.find((e) => e.list_id === entryId);
     if (!entry) return;
 
-    const newNotes = prompt("Enter notes:", entry.notes) || "";
-    const priorityInput = prompt("Enter priority(1-10):", entry.priority?.toString() || "0");
+    const newNotes = await showPrompt("Enter notes:", entry.notes || "") ?? "";
+const priorityInput = await showPrompt("Enter priority (1-10):", entry.priority?.toString() || "0");
+if (priorityInput === null) return;
     const newPriority = priorityInput ? parseInt(priorityInput) : 0;
 
     if (isNaN(newPriority)) {
@@ -143,7 +168,7 @@ export default function ToWatchList() {
         {
           notes: newNotes,
           priority: newPriority,
-          movieID: entry.movieID  //pass the movieID for selected entry , on which user is doing stuff
+          movieID: entry.movie_id  //pass the movieID for selected entry , on which user is doing stuff
         },
         apiKey!
       );
@@ -176,30 +201,38 @@ export default function ToWatchList() {
 
       <div className="watchlist-grid" style={{ display: "flex", flexWrap: "wrap", gap: "1em", marginTop: "1em" }}>
         {sortedList.map((entry) => {
-          const movie = allMovies.find(m => m.movie_id === entry.movieID); // find movie details by ID
+          const movie = allMovies.find(m => m.movie_id === entry.movie_id); // find movie details by ID
 
           return (
             <MovieCard
-              key={entry.movieID}
+              key={entry.movie_id}
               movie={{
-                movie_id: entry.movieID,
-                title: movie?.title || `Movie ${entry.movieID}`,
+                movie_id: entry.movie_id,
+                title: movie?.title || `Movie ${entry.movie_id}`,
                 cover: movie?.cover || "",
                 rating: movie?.rating?.toString() || "-",
                 priority: entry.priority,  // pass priority
                 notes: entry.notes,        // pass notes
               }}
-              onClick={() => handleMarkAsWatched(entry.listID)}
+              onClick={() => handleMarkAsWatched(entry.list_id)}
               actionButtonText="✔ Mark Completed"
-              onActionButtonClick={() => handleMarkAsWatched(entry.listID)}
-              onRemove={() => handleRemove(entry.listID)}
-              onQuickPriority={() => handlePriorityChange(entry.listID)}
-              onUpdateEntry={() => handleUpdateEntry(entry.listID)}
+              onActionButtonClick={() => handleMarkAsWatched(entry.list_id)}
+              onRemove={() => handleRemove(entry.list_id)}
+              onQuickPriority={() => handlePriorityChange(entry.list_id)}
+              onUpdateEntry={() => handleUpdateEntry(entry.list_id)}
             />
           );
         })}
       </div>
     </div>
+    {modal && (
+  <Modal
+    message={modal.message}
+    defaultValue={modal.defaultValue}
+    onConfirm={modal.onConfirm}
+    onCancel={() => setModal(null)}
+  />
+)}
     </>
   );
 }
