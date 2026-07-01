@@ -4,6 +4,7 @@ import { useAuth } from "./context/AuthContext";
 
 // import required pages to correctly setup app routing 
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import ToWatch from "./pages/ToWatch";
 import CompletedWatch from "./pages/CompletedWatch";
@@ -11,6 +12,7 @@ import UserStats from "./pages/UserStats";
 import MovieDetails from "./pages/MovieDetails";
 import type { ReactNode } from "react";
 import Navbar from "./components/Navbar";
+
 export default function AppRouter() {
   const { apiKey } = useAuth();
 
@@ -26,6 +28,8 @@ export default function AppRouter() {
       
       <Routes>
         <Route path="/login" element={<Login />} />
+
+        <Route path="/signup" element={<Signup />} />
 
         <Route
           path="/home"

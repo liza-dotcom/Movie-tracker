@@ -34,9 +34,9 @@ export default function Login() {
     if (response.success) {
       console.log("Login success flag is true.");
 
-      if (response.api_key && response.userID) {
+      if (response.token && response.userID) {
         console.log("API key and userID found:", response.api_key, response.userID);
-        setApiKey(response.api_key);
+        setApiKey(response.token);
         setUserID(response.userID);
         navigate("/home");
       } else {
@@ -77,13 +77,9 @@ export default function Login() {
           {error && <p className="error-msg">{error}</p>}
         </form>
         <p>
-          Don't have an account? <a 
-            href="https://loki.trentu.ca/~lizachoudhry/3430/assn/assn2-liza-dotcom/create-account.php"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Create Account
-          </a>
+          Don't have an account?{" "}
+          {/* CHANGE 3: Link to /signup instead of external PHP URL */}
+          <Link to="/signup">Create Account</Link>
         </p>
       </div>
     </div>
