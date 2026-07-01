@@ -4,17 +4,18 @@ import { getApiBase } from "./apiClient";
 const BASE = getApiBase();
 
 export interface ToWatchEntry {
-  listID: number;
-  userID: number;
-  movieID: number;
+  list_id: number;      
+  user_id: number;      
+  movie_id: number;     
   notes?: string;
   priority?: number;
+  title?: string;   
   
 }
  // Declare the function to fetch all entries in the user's toWatch list to display when user visits it
  
 export async function getToWatchList(apiKey: string): Promise<ToWatchEntry[]> {
-  const res = await fetch(`${BASE}/toWatchList/entries`, {
+  const res = await fetch(`${BASE}/towatchlist/entries`, {
     method: "GET",
     headers:
      {  
@@ -34,7 +35,7 @@ export async function getToWatchList(apiKey: string): Promise<ToWatchEntry[]> {
  // used a paramater movieId to get ID of the movie to add
  
 export async function addToWatch(movieID: number, apiKey: string) {
-  const res = await fetch(`${BASE}/toWatchList/entries`, {
+  const res = await fetch(`${BASE}/towatchlist/entries`, {
     // set the request 
     method: "POST",
     headers:
@@ -55,7 +56,7 @@ export async function updateToWatchEntry(
   updates: { movieID:number; notes?: string; priority?: number },
   apiKey: string
 ) {
-  const res = await fetch(`${BASE}/toWatchList/entries/${listID}`,
+  const res = await fetch(`${BASE}/towatchlist/entries/${listID}`,
  {
     method: "PUT",
     headers:
@@ -77,7 +78,7 @@ export async function updatePriority(
   priority: number,
   apiKey: string
 ) {
-  const res = await fetch(`${BASE}/toWatchList/entries/${entryId}/priority`, {
+  const res = await fetch(`${BASE}/towatchlist/entries/${entryId}/priority`, {
     method: "PATCH",
     headers:
      {  
@@ -93,7 +94,7 @@ export async function updatePriority(
 //Declare a function to delete/remove a movie from toWAtchList
 
 export async function deleteToWatchEntry(entryId: number, apiKey: string) {
-  const res = await fetch(`${BASE}/toWatchList/entries/${entryId}`, {
+  const res = await fetch(`${BASE}/towatchlist/entries/${entryId}`, {
     method: "DELETE",
    headers:{ "Authorization": `Bearer ${apiKey}` },
 
@@ -115,13 +116,13 @@ export async function markAsWatched(
   const allEntries = await getToWatchList(apiKey);
 
   // Step 2 — find the entry with the ID we want
-  const entry = allEntries.find(e => e.listID === entryId);
+  const entry = allEntries.find(e => e.list_id === entryId);
   if (!entry) throw new Error("Entry not found in toWatch list");
 
 
   // 2) Build the request body(required fields) for completed list like movieID, rating, notes, date_initially_watched, date_last_watched, times_watched
   const completedPayload = {
-    movieID: entry.movieID,
+    movieID: entry.movie_id,
     ...(rating !== undefined && { rating }),
     notes: entry.notes || "",
     date_initially_watched: new Date().toISOString().split("T")[0],
@@ -131,7 +132,7 @@ export async function markAsWatched(
   
 
   // 3) Add to completed list
-  const addRes = await fetch(`${BASE}/completedWatchList/entries`, {
+  const addRes = await fetch(`${BASE}/completedwatchlist/entries`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

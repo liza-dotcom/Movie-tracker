@@ -34,10 +34,10 @@ export default function Login() {
     if (response.success) {
       console.log("Login success flag is true.");
 
-      if (response.token && response.userID) {
+      if (response.token && response.userId) {
         console.log("API key and userID found:", response.api_key, response.userID);
         setApiKey(response.token);
-        setUserID(response.userID);
+        setUserID(response.userId);
         navigate("/home");
       } else {
         console.warn("API key or userID missing in response:", response);
