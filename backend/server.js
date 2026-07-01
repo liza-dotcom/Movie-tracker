@@ -1,11 +1,13 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const pool = require('./db');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
+app.use(cors({ origin: 'http://localhost:5173' }));
 
 // Basic health check route
 app.get('/', (req, res) => {

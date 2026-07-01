@@ -53,11 +53,11 @@ console.log("FULL RAW STATS RESPONSE:", data);
   const userInfo= data?.data?.userInfo ?? {};
 
   return {
-    totalTimeWatched: parseFloat(data.data.completed.total_time_watched_inMinutes) || 0,
+    totalTimeWatched: parseFloat(data.data.completed.total_time_watched_in_minutes) || 0,
     averageRating: parseFloat(data.data.completed.avg_score) || 0,
     completedMoviesCount: data.data.completed.total_completed || 0,
     plannedToWatchCount: data.data.toWatch.total_to_watch || 0,
-    plannedTimeToWatch: Number(toWatch.planned_time_to_watch_inMinutes) || 0,
+    plannedTimeToWatch: Number(toWatch.planned_time_to_watch_in_minutes) || 0,
     userInfo: {
       username: userInfo.username,
       email: userInfo.email

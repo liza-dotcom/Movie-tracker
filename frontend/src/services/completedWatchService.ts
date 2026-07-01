@@ -2,9 +2,9 @@ import { getApiBase } from './apiClient'; // call the function in apiClient to g
 
 // define an interface for required fields for a movie in completedWatchList 
 export interface CompletedMovie {
-  completedID: number;
-  userID: number;
-  movieID: number;
+  completed_id: number;
+  user_id: number;
+  movie_id: number;
   rating: number;
   notes: string;
   date_initially_watched: string;
@@ -28,7 +28,7 @@ export async function getCompletedList(
   params.append('sortBy', sortBy);  // add the sorting criteria to url as well 
   params.append('sortOrder', sortOrder); // add sorting order to url 
 
-  const url = `${base}/completedWatchList/entries?${params.toString()}`; // store the final url after addign sorting criteria and order
+  const url = `${base}/completedwatchlist/entries?${params.toString()}`; // store the final url after addign sorting criteria and order
 
   const res = await fetch(url, 
     // prepare the request : body, type, headers etc.
@@ -64,7 +64,7 @@ export async function getCompletedList(
 export async function incrementTimesWatched(apiKey: string, completedID: number) {
   const base = getApiBase(); // get the request url 
 
-  const url = `${base}/completedWatchList/entries/${completedID}/times-watched`; // make the endpoint from base url by appending 
+  const url = `${base}/completedwatchlist/entries/${completedID}/times-watched`; // make the endpoint from base url by appending 
 
   // make the request (defien method, url, headers etc) and store the respose from request in a variable
   const res = await fetch(url, {

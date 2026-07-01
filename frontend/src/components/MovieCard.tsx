@@ -95,12 +95,12 @@ export default function MovieCard({ movie, onClick, actionButtonText , onActionB
        </div>
        <div>
         {showDropdown && (
-            <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
-              {onRemove && <button onClick={onRemove}>Delete</button>}
-              {onQuickPriority && <button onClick={onQuickPriority}>Change Priority</button>}
-              {onUpdateEntry && <button onClick={onUpdateEntry}>Update Entry</button>}
-            </div>
-          )}
+    <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+      {onRemove && <button onClick={() => { setShowDropdown(false); onRemove(); }}>Delete</button>}
+      {onQuickPriority && <button onClick={() => { setShowDropdown(false); onQuickPriority(); }}>Change Priority</button>}
+      {onUpdateEntry && <button onClick={() => { setShowDropdown(false); onUpdateEntry(); }}>Update Entry</button>}
+    </div>
+  )}
        </div>
   
     </div>

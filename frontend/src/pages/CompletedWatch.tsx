@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import MovieCard from "../components/MovieCard";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
+import Modal from "../components/Modal";
 import {
   getCompletedList,
   incrementTimesWatched,
@@ -21,7 +22,27 @@ export default function CompletedWatch() {
   const [allMovies, setAllMovies] = useState<any[]>([]);
   const [sortBy, setSortBy] = useState<'rating' | 'date_last_watched' | 'date_initially_watched'>('rating');
   const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
-  const [personalDetailsMovie, setPersonalDetailsMovie] = useState<CompletedMovie | null>(null); // state to show personalized details like times watched etc 
+  const [personalDetailsMovie, setPersonalDetailsMovie] = useState<CompletedMovie | null>(null); // state to show personalized details like times watched etc
+  
+    const [modal, setModal] = useState<{
+    message: string;
+    defaultValue: string;
+    onConfirm: (val: string) => void;
+  } | null>(null);
+
+  const showPrompt = (message: string, defaultValue: string = ""): Promise<string | null> => {
+    return new Promise((resolve) => {
+      setModal({
+        message,
+        defaultValue,
+        onConfirm: (val) => {
+          setModal(null);
+          resolve(val);
+        },
+      });
+    });
+  };
+  
 
   // Logout handler
   const handleLogout = () => {
@@ -76,7 +97,9 @@ export default function CompletedWatch() {
 
   // handle when user update rating for a movie
   const handleUpdateRating = async (entry: CompletedMovie) => {
-    const ratingInput = prompt(`Enter rating (1-10) for "${entry.title}":`, entry.rating?.toString() || "");
+    const ratingInput = await showPrompt(`Enter rating (1-10) for "${entry.title}":`, entry.rating?.toString() || "");
+    if (ratingInput === null) return;
+
     const numericRating = ratingInput !== null && ratingInput.trim() !== "" ? parseFloat(ratingInput) : null;
 
     if (numericRating !== null && (numericRating < 1 || numericRating > 10)) {
@@ -85,7 +108,7 @@ export default function CompletedWatch() {
     }
 
     try {
-      const res = await fetch(`${getApiBase()}/completedWatchList/entries/${entry.completedID}/rating`, {
+      const res = await fetch(`${getApiBase()}/completedwatchlist/entries/${entry.completed_id}/rating`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -103,10 +126,10 @@ export default function CompletedWatch() {
 
   // Merge movie details with completed entries
   const mergedList = completedList.map(entry => {
-    const movie = allMovies.find(m => m.movie_id === entry.movieID);
+    const movie = allMovies.find(m => m.movie_id === entry.movie_id);
     return {
       ...entry,
-      title: movie?.title || `Movie ${entry.movieID}`,
+      title: movie?.title || `Movie ${entry.movie_id}`,
       cover: movie?.cover || '',
       rating: entry.rating ?? 0,
     };
@@ -156,16 +179,16 @@ export default function CompletedWatch() {
         <div className="completedlist-grid">
           {sortedMergedList.map(entry => (
             <MovieCard
-              key={entry.completedID}
+              key={entry.completed_id}
               movie={{
-                movie_id: entry.movieID,
+                movie_id: entry.movie_id,
                 title: entry.title,
                 cover: entry.cover,
                 rating: entry.rating.toString(),
                 notes: entry.notes,
               }}
               actionButtonText="↺ Watched Again"
-              onActionButtonClick={() => handleIncrementTimesWatched(entry.completedID)}
+              onActionButtonClick={() => handleIncrementTimesWatched(entry.completed_id)}
               onUpdateEntry={() => handleUpdateRating(entry)}
             >
               {/* Add personalized details button */}
@@ -200,6 +223,15 @@ export default function CompletedWatch() {
 
         </div>
       </div>
+
+      {modal && (
+    <Modal
+      message={modal.message}
+      defaultValue={modal.defaultValue}
+      onConfirm={modal.onConfirm}
+      onCancel={() => setModal(null)}
+    />
+)}
     </>
   );
 }
