@@ -31,7 +31,7 @@ router.get('/entries', async (req, res) => {
 
   try {
     let sql = `
-      SELECT c.*, m.title
+      SELECT c.*, m.title, m.poster
       FROM completed_watchlist c
       JOIN movies m ON c.movie_id = m.movie_id
       WHERE c.user_id = $1

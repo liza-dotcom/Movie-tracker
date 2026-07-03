@@ -73,6 +73,7 @@ export default function CompletedWatch() {
   const fetchCompletedList = async () => {
     try {
       const entries = await getCompletedList(apiKey!, undefined, sortBy, sortOrder);
+      console.log("First completed entry:", entries[0]); // add this line
       setCompletedList(entries);
     } catch (err) {
       console.error("Failed to fetch completed list:", err);
@@ -129,11 +130,11 @@ export default function CompletedWatch() {
     const movie = allMovies.find(m => m.movie_id === entry.movie_id);
     return {
       ...entry,
-      title: movie?.title || `Movie ${entry.movie_id}`,
-      cover: movie?.cover || '',
       rating: entry.rating ?? 0,
     };
   });
+
+  
 
   // Sort based on current sortBy and sortOrder
   const sortedMergedList = [...mergedList].sort((a, b) => {
@@ -183,7 +184,7 @@ export default function CompletedWatch() {
               movie={{
                 movie_id: entry.movie_id,
                 title: entry.title,
-                cover: entry.cover,
+                cover: entry.poster || '',
                 rating: entry.rating.toString(),
                 notes: entry.notes,
               }}

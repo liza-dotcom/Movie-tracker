@@ -11,6 +11,7 @@ export interface CompletedMovie {
   date_last_watched: string;
   times_watched: number;
   title: string;
+  poster?: string; 
 }
 
 // Declare the function to get all the entries in a copletedWatchList(of given id) for the user whose apikey is recieved 
