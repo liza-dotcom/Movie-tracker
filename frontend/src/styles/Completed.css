@@ -21,6 +21,10 @@
   gap: 1em;
   margin-bottom: 1em;
   font-size: 0.9em;
+  width: fit-content;
+  background-color: #1f1f1f;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
 }
 
 /* sort label */

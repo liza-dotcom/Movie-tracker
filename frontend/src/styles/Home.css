@@ -8,8 +8,8 @@
 
 /* Movie grid */
 .movie-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1em;
   margin-top: 1em;
 }
