@@ -200,7 +200,7 @@ router.post('/entries', async (req, res) => {
 router.patch('/entries/:id/rating', async (req, res) => {
   const userId = req.user.userId;
   const completedId = req.params.id;
-  const { rating } = req.body;
+  const { rating, notes } = req.body;  // added notes
 
   if (rating === undefined || isNaN(rating)) {
     return res.status(400).json({ success: false, message: 'Missing or invalid rating' });
@@ -242,14 +242,17 @@ router.patch('/entries/:id/rating', async (req, res) => {
 
     const { newAvg } = calculateNewAvgRating(oldAvg, oldCount, oldRating, newRating);
 
+    // Update rating AND notes together
     const updateResult = await client.query(
-      'UPDATE completed_watchlist SET rating = $1 WHERE completed_id = $2 AND user_id = $3',
-      [newRating, completedId, userId]
+      `UPDATE completed_watchlist 
+       SET rating = $1, notes = COALESCE($2, notes)
+       WHERE completed_id = $3 AND user_id = $4`,
+      [newRating, notes || null, completedId, userId]
     );
 
     if (updateResult.rowCount === 0) {
       await client.query('ROLLBACK');
-      return res.status(404).json({ success: false, message: 'Rating update failed — no rows affected' });
+      return res.status(404).json({ success: false, message: 'Update failed — no rows affected' });
     }
 
     await client.query(
@@ -258,11 +261,11 @@ router.patch('/entries/:id/rating', async (req, res) => {
     );
 
     await client.query('COMMIT');
-    res.status(200).json({ success: true, message: 'Rating updated successfully' });
+    res.status(200).json({ success: true, message: 'Entry updated successfully' });
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('Error updating rating:', err);
-    res.status(500).json({ success: false, message: `Database error while updating rating: ${err.message}` });
+    console.error('Error updating entry:', err);
+    res.status(500).json({ success: false, message: `Database error: ${err.message}` });
   } finally {
     client.release();
   }

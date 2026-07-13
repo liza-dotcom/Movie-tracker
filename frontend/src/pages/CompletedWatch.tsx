@@ -98,17 +98,28 @@ export default function CompletedWatch() {
 
   // handle when user update rating for a movie
   const handleUpdateRating = async (entry: CompletedMovie) => {
-    const ratingInput = await showPrompt(`Enter rating (1-10) for "${entry.title}":`, entry.rating?.toString() || "");
-    if (ratingInput === null) return;
+  const ratingInput = await showPrompt(
+    `Enter new rating (1-10) for "${entry.title}":`, 
+    entry.rating?.toString() || ""
+  );
+  if (ratingInput === null) return;
 
-    const numericRating = ratingInput !== null && ratingInput.trim() !== "" ? parseFloat(ratingInput) : null;
+  const notesInput = await showPrompt(
+    `Enter notes for "${entry.title}":`,
+    entry.notes || ""
+  );
+  if (notesInput === null) return;
 
-    if (numericRating !== null && (numericRating < 1 || numericRating > 10)) {
-      alert("Rating must be between 1 and 10.");
-      return;
-    }
+  const numericRating = ratingInput.trim() !== "" ? parseFloat(ratingInput) : null;
 
-    try {
+  if (numericRating !== null && (numericRating < 1 || numericRating > 10)) {
+    console.error("Rating must be between 1 and 10.");
+    return;
+  }
+
+  try {
+    // Update rating
+    if (numericRating !== null) {
       const res = await fetch(`${getApiBase()}/completedwatchlist/entries/${entry.completed_id}/rating`, {
         method: "PATCH",
         headers: {
@@ -118,12 +129,25 @@ export default function CompletedWatch() {
         body: JSON.stringify({ rating: numericRating })
       });
       if (!res.ok) throw new Error("Failed to update rating");
-      fetchCompletedList();
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update rating");
     }
-  };
+
+    // Update notes if changed
+    if (notesInput !== entry.notes) {
+      await fetch(`${getApiBase()}/completedwatchlist/entries/${entry.completed_id}/notes`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({ notes: notesInput })
+      });
+    }
+
+    fetchCompletedList();
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   // Merge movie details with completed entries
   const mergedList = completedList.map(entry => {
