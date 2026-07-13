@@ -4,6 +4,7 @@ import MovieCard from "../components/MovieCard";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
+import CompletedEntryModal from "../components/CompletedEntryModal";
 import {
   getCompletedList,
   incrementTimesWatched,
@@ -29,6 +30,9 @@ export default function CompletedWatch() {
     defaultValue: string;
     onConfirm: (val: string) => void;
   } | null>(null);
+
+  const [entryModal, setEntryModal] = useState<CompletedMovie | null>(null);
+
 
   const showPrompt = (message: string, defaultValue: string = ""): Promise<string | null> => {
     return new Promise((resolve) => {
@@ -97,58 +101,40 @@ export default function CompletedWatch() {
   };
 
   // handle when user update rating for a movie
-  const handleUpdateRating = async (entry: CompletedMovie) => {
-  const ratingInput = await showPrompt(
-    `Enter new rating (1-10) for "${entry.title}":`, 
-    entry.rating?.toString() || ""
-  );
-  if (ratingInput === null) return;
-
-  const notesInput = await showPrompt(
-    `Enter notes for "${entry.title}":`,
-    entry.notes || ""
-  );
-  if (notesInput === null) return;
-
-  const numericRating = ratingInput.trim() !== "" ? parseFloat(ratingInput) : null;
-
-  if (numericRating !== null && (numericRating < 1 || numericRating > 10)) {
-    console.error("Rating must be between 1 and 10.");
-    return;
-  }
+  const handleUpdateEntry = async (rating: number | null, notes: string) => {
+  if (!entryModal) return;
 
   try {
-    // Update rating
-    if (numericRating !== null) {
-      const res = await fetch(`${getApiBase()}/completedwatchlist/entries/${entry.completed_id}/rating`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({ rating: numericRating })
-      });
-      if (!res.ok) throw new Error("Failed to update rating");
-    }
-
-    // Update notes if changed
-    if (notesInput !== entry.notes) {
-      await fetch(`${getApiBase()}/completedwatchlist/entries/${entry.completed_id}/notes`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({ notes: notesInput })
-      });
-    }
-
+    const res = await fetch(`${getApiBase()}/completedwatchlist/entries/${entryModal.completed_id}/rating`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({ rating, notes })
+    });
+    if (!res.ok) throw new Error("Failed to update entry");
+    setEntryModal(null);
     fetchCompletedList();
   } catch (err) {
     console.error(err);
   }
 };
 
+const handleDeleteEntry = async () => {
+  if (!entryModal) return;
+  try {
+    const res = await fetch(`${getApiBase()}/completedwatchlist/entries/${entryModal.completed_id}`, {
+      method: "DELETE",
+      headers: { "Authorization": `Bearer ${apiKey}` }
+    });
+    if (!res.ok) throw new Error("Failed to delete entry");
+    setEntryModal(null);
+    fetchCompletedList();
+  } catch (err) {
+    console.error(err);
+  }
+};
   // Merge movie details with completed entries
   const mergedList = completedList.map(entry => {
     const movie = allMovies.find(m => m.movie_id === entry.movie_id);
@@ -214,7 +200,7 @@ export default function CompletedWatch() {
               }}
               actionButtonText="↺ Watched Again"
               onActionButtonClick={() => handleIncrementTimesWatched(entry.completed_id)}
-              onUpdateEntry={() => handleUpdateRating(entry)}
+              onUpdateEntry={() => setEntryModal(entry)}
             >
               {/* Add personalized details button */}
               <button
@@ -249,13 +235,18 @@ export default function CompletedWatch() {
         </div>
       </div>
 
-      {modal && (
-    <Modal
-      message={modal.message}
-      defaultValue={modal.defaultValue}
-      onConfirm={modal.onConfirm}
-      onCancel={() => setModal(null)}
-    />
+     
+{entryModal && (
+  <CompletedEntryModal
+    entry={{
+      title: entryModal.title,
+      rating: entryModal.rating,
+      notes: entryModal.notes,
+    }}
+    onConfirm={handleUpdateEntry}
+    onDelete={handleDeleteEntry}
+    onCancel={() => setEntryModal(null)}
+  />
 )}
     </>
   );
