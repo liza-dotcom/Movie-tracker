@@ -7,8 +7,12 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:5173' }));
-
+app.use(cors({ 
+  origin: [
+    'http://localhost:5173',
+    'https://movie-tracker-frontend-8kmrndfug-liza10.vercel.app'
+  ]
+}));
 // Basic health check route
 app.get('/', (req, res) => {
   res.send('Movie app backend is running.');
