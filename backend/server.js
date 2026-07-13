@@ -7,11 +7,18 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(cors({ 
-  origin: [
-    'http://localhost:5173',
-    'https://movie-tracker-frontend-8kmrndfug-liza10.vercel.app'
-  ]
+app.use(cors({
+  origin: function(origin, callback) {
+    const allowed = [
+      'http://localhost:5173',
+      /\.vercel\.app$/  // allows any vercel.app subdomain
+    ];
+    if (!origin || allowed.some(o => typeof o === 'string' ? o === origin : o.test(origin))) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 }));
 // Basic health check route
 app.get('/', (req, res) => {
